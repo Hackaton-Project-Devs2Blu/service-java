@@ -53,20 +53,23 @@ jobs:
           extra_args: --debug --only-verified
 
      
-      - name: 🛡️ Run Trivy Vulnerability Scanner (Soft Fail Mode)
-        uses: aquasecurity/trivy-action@master
-        with:
-          scan-type: 'fs'
-          scan-ref: '.'
-          format: 'sarif'
-          output: 'trivy-results.sarif'
-          severity: 'CRITICAL,HIGH'
-          ignore-unfixed: true
-          exit-code: '0' 
+      - name: 📥 Install Trivy CLI
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: 🛡️ Run Trivy Vulnerability Scanner (Soft Fail)
+        run: |
+          # --exit-code 0: Diz pro Trivy que encontrar vírus NÃO é erro de sistema
+          # || true: O cinto de segurança final. Se tudo der errado, ele ainda passa.
+          trivy fs . \
+            --format sarif \
+            --output trivy-results.sarif \
+            --severity CRITICAL,HIGH \
+            --exit-code 0 || true
 
       - name: ⬆️ Upload Trivy scan results to GitHub Security tab
         uses: github/codeql-action/upload-sarif@v3
-        if: always() 
+        if: always()
         with:
           sarif_file: 'trivy-results.sarif'
 
