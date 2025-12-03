@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM maven:3.9.6-amazoncorretto-17-alpine AS builder
+FROM --platform=$BUILDPLATFORM maven:3.9-amazoncorretto-17 AS builder
 WORKDIR /app
 COPY java-log-service/pom.xml .
 RUN mvn dependency:go-offline
