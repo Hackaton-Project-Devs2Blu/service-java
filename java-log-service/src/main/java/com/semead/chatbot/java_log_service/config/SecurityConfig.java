@@ -1,0 +1,24 @@
+package com.semead.chatbot.java_log_service.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+
+@Configuration
+@EnableWebSecurity
+public class SecurityConfig {
+
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        http
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(new AntPathRequestMatcher("/actuator/health")).permitAll() // Permite acesso público ao health check
+                        .anyRequest().authenticated() // Exige autenticação para todo o resto
+                );
+        // Aqui, no futuro, adicionaremos a configuração para validar o JWT.
+        return http.build();
+    }
+}
