@@ -10,6 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.List;
+
+import static org.hamcrest.Matchers.isA;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -27,14 +30,15 @@ class KnowledgeBaseControllerTest {
     private ObjectMapper objectMapper;
 
     @Test
-    @WithMockUser // Simula um usuário logado
+    @WithMockUser
     void shouldReturnOkWhenGetAllKnowledgeBaseItems() throws Exception {
         mockMvc.perform(get("/knowledgebase"))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.content", isA(List.class)));
     }
 
     @Test
-    @WithMockUser // Simula um usuário logado
+    @WithMockUser
     void shouldCreateKnowledgeBaseItem() throws Exception {
         // Arrange
         KnowledgeBaseRequestDto requestDto = new KnowledgeBaseRequestDto();
@@ -46,7 +50,7 @@ class KnowledgeBaseControllerTest {
 
         // Act & Assert
         mockMvc.perform(post("/knowledgebase")
-                        .with(csrf()) // Adiciona um token CSRF válido
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isCreated())
