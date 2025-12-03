@@ -2,12 +2,15 @@ package com.semead.chatbot.java_log_service.service;
 
 import com.semead.chatbot.java_log_service.dto.KnowledgeBaseRequestDto;
 import com.semead.chatbot.java_log_service.dto.KnowledgeBaseResponseDto;
+import com.semead.chatbot.java_log_service.dto.PaginatedResponseDto;
 import com.semead.chatbot.java_log_service.model.KnowledgeBase;
 import com.semead.chatbot.java_log_service.model.KnowledgeBaseUser;
 import com.semead.chatbot.java_log_service.repository.KnowledgeBaseRepository;
 import com.semead.chatbot.java_log_service.repository.KnowledgeBaseUserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,10 +25,21 @@ public class KnowledgeBaseService {
     @Autowired
     private KnowledgeBaseUserRepository userRepository;
 
-    public List<KnowledgeBaseResponseDto> findAll() {
-        return knowledgeBaseRepository.findAll().stream()
+    public PaginatedResponseDto<KnowledgeBaseResponseDto> findAll(Pageable pageable) {
+        Page<KnowledgeBase> knowledgeBasePage = knowledgeBaseRepository.findAll(pageable);
+
+        List<KnowledgeBaseResponseDto> dtos = knowledgeBasePage.getContent().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+
+        PaginatedResponseDto<KnowledgeBaseResponseDto> response = new PaginatedResponseDto<>();
+        response.setContent(dtos);
+        response.setNumber(knowledgeBasePage.getNumber());
+        response.setSize(knowledgeBasePage.getSize());
+        response.setTotalElements(knowledgeBasePage.getTotalElements());
+        response.setTotalPages(knowledgeBasePage.getTotalPages());
+
+        return response;
     }
 
     public KnowledgeBaseResponseDto findById(Long id) {
