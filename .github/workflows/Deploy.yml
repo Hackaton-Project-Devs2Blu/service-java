@@ -9,13 +9,12 @@ permissions:
   contents: read
 
 env:
-  AWS_REGION: us-west-2
-  
-  ECR_REPOSITORY: service-java-hackathon      
-  ECS_SERVICE: service-java           
-  ECS_CLUSTER: hackathon-project-cluster-hackathon 
-  CONTAINER_NAME: java-container
-
+      AWS_REGION: us-west-2
+      ECR_REPOSITORY: service-java-hackathon        
+      ECS_SERVICE: service-java                     
+      ECS_CLUSTER: hackathon-project-cluster-hackathon
+      ECS_TASK_DEFINITION: java-task-hackathon      
+      CONTAINER_NAME: java-container              
 jobs:
   deploy:
     name: Build & Deploy
@@ -56,7 +55,7 @@ jobs:
 
       - name: 📥 Download Task Definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ env.ECS_SERVICE }}-task-hackathon \
+          aws ecs describe-task-definition --task-definition ${{ env.ECS_TASK_DEFINITION }} \
           --query taskDefinition > task-definition.json
 
       - name: 📝 Update Task Definition
