@@ -1,4 +1,4 @@
-FROM maven:3.9-eclipse-temurin-17-alpine AS builder
+FROM --platform=$BUILDPLATFORM maven:3.9-eclipse-temurin-17-alpine AS builder
 WORKDIR /app
 COPY java-log-service/pom.xml .
 RUN mvn dependency:go-offline
