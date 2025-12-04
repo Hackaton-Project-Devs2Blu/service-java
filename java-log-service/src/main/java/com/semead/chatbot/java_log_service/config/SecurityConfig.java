@@ -15,10 +15,10 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(new AntPathRequestMatcher("/actuator/health")).permitAll() // Permite acesso público ao health check
-                        .anyRequest().authenticated() // Exige autenticação para todo o resto
+                        .requestMatchers(new AntPathRequestMatcher("/actuator/health")).permitAll()
+                        .anyRequest().authenticated()
                 );
-        // Aqui, no futuro, adicionaremos a configuração para validar o JWT.
+
         return http.build();
     }
 }
