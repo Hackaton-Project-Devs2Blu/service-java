@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "knowledge_base")
+@Table(name = "knowledgebase") // <-- 1. NOME DA TABELA CORRIGIDO
 public class KnowledgeBase {
 
     @Id

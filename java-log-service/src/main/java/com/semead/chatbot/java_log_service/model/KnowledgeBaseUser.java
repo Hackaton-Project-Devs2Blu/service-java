@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Data
-@Table(name = "knowledge_base_users")
+@Table(name = "users") // <-- 1. NOME DA TABELA CORRIGIDO
 public class KnowledgeBaseUser {
 
     @Id
@@ -19,6 +19,9 @@ public class KnowledgeBaseUser {
 
     @Column(unique = true, nullable = false)
     private String email;
+
+    @Column(name = "senha_hash", nullable = false) // <-- 2. CAMPO ADICIONADO
+    private String senhaHash;
 
     @Column(name = "is_admin")
     private boolean admin;
